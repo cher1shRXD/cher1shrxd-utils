@@ -5,7 +5,7 @@ Next.js App Router용 페이지 전환 로딩바
 ## 설치
 
 ```bash
-pnpm add @cher1shrxd/loading zustand
+pnpm add @cher1shrxd/loading
 ```
 
 ## 설정

@@ -11,6 +11,8 @@ export interface ApiRequestConfig extends Omit<AxiosRequestConfig, "method" | "u
   _useServerCookies?: boolean;
 }
 
+export type ApiError<T> = AxiosError<T>;
+
 export interface InterceptorCallbacks {
   onRequest?: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>;
   onRequestError?: (error: AxiosError) => Promise<never>;

@@ -5,7 +5,7 @@ React/Next.js용 모달 라이브러리 (다중 모달 지원)
 ## 설치
 
 ```bash
-pnpm add @cher1shrxd/modal zustand
+pnpm add @cher1shrxd/modal
 ```
 
 ## 설정

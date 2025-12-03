@@ -1,6 +1,6 @@
 {
   "name": "@cher1shrxd/toast",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "React/Next.js용 토스트 알림 라이브러리",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

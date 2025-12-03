@@ -5,7 +5,7 @@ Next.js SSR 환경에서 쿠키 전달을 지원하는 API 클라이언트
 ## 설치
 
 ```bash
-pnpm add @cher1shrxd/api-client axios
+pnpm add @cher1shrxd/api-client
 ```
 
 ## 설정
