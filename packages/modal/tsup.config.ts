@@ -5,7 +5,7 @@ export default defineConfig({
   format: ["cjs", "esm"],
   dts: true,
   clean: true,
-  external: ["react", "react-dom", "next", "next/navigation", "zustand"],
+  external: ["react", "react-dom", "zustand"],
   treeshake: true,
   splitting: false,
   sourcemap: false,

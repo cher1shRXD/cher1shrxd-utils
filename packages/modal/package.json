@@ -1,7 +1,7 @@
 {
-  "name": "@cher1shrxd/toast",
+  "name": "@cher1shrxd/modal",
   "version": "0.0.1",
-  "description": "A beautiful toast notification library for React/Next.js",
+  "description": "A flexible modal/dialog library for React with stacking support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -29,14 +29,14 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
-    "lucide-react": ">=0.300.0"
+    "zustand": ">=4.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
-    "lucide-react": "^0.468.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "zustand": "^5.0.0",
     "sass": "^1.80.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.0"
@@ -50,9 +50,10 @@
   },
   "keywords": [
     "react",
-    "toast",
-    "notification",
-    "nextjs"
+    "modal",
+    "dialog",
+    "popup",
+    "overlay"
   ],
   "author": "cher1shrxd",
   "license": "MIT"
