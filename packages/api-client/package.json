@@ -1,0 +1,31 @@
+{
+  "name": "@cher1shrxd/api-client",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "axios": ">=1.0.0"
+  },
+  "devDependencies": {
+    "axios": "^1.7.0",
+    "typescript": "^5.7.0",
+    "tsup": "^8.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
