@@ -1,6 +1,6 @@
 {
   "name": "@cher1shrxd/api-client",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A flexible API client for Next.js with server-side cookie support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@cher1shrxd/toast",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A beautiful toast notification library for React/Next.js",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
