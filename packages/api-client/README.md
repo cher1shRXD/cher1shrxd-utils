@@ -1,24 +1,16 @@
 # @cher1shrxd/api-client
 
-A flexible, type-safe API client for Next.js with server-side cookie support.
+Next.js SSR 환경에서 쿠키 전달을 지원하는 API 클라이언트
 
-## Features
-
-- 🔒 **Server-side cookie forwarding** - Seamlessly pass cookies in SSR
-- 🔗 **Builder pattern** - Fluent API with `.withCookie()` chain
-- ⚡ **Thenable** - Use with `await` or `.then()`
-- 🎯 **TypeScript first** - Full type inference
-- 🔧 **Configurable** - Custom interceptors, headers, and more
-
-## Installation
+## 설치
 
 ```bash
 pnpm add @cher1shrxd/api-client axios
 ```
 
-## Setup
+## 설정
 
-### Basic Setup
+### 기본 설정
 
 ```typescript
 // lib/api.ts
@@ -29,17 +21,17 @@ export const apiClient = createApiClient({
 });
 ```
 
-### Full Configuration
+### 전체 설정
 
 ```typescript
 // lib/api.ts
 import { createApiClient } from "@cher1shrxd/api-client";
 
 export const apiClient = createApiClient({
-  // Required
+  // 필수
   baseURL: process.env.NEXT_PUBLIC_API_URL!,
 
-  // Optional
+  // 선택
   timeout: 10000,
   headers: {
     "X-Custom-Header": "value",
@@ -47,16 +39,15 @@ export const apiClient = createApiClient({
   withCredentials: true,
   debug: process.env.NODE_ENV === "development",
 
-  // Server-side cookie config
+  // 서버사이드 쿠키 설정
   serverCookieConfig: {
     cookieNames: ["SESSION", "SESSION-LOCAL"],
-    redirectPath: "/login", // or null to disable
+    redirectPath: "/login", // null로 설정시 리다이렉트 비활성화
   },
 
-  // Interceptor callbacks (recommended)
+  // 인터셉터 콜백
   interceptors: {
     onRequest: (config) => {
-      // Add auth token
       const token = getToken();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -65,23 +56,22 @@ export const apiClient = createApiClient({
     },
     onResponseError: (error) => {
       if (error.response?.status === 401) {
-        // Handle unauthorized
         window.location.href = "/login";
       }
       return Promise.reject(error);
     },
   },
 
-  // OR: Full control with setupInterceptors (replaces default interceptors)
+  // 또는 setupInterceptors로 직접 제어 (기본 인터셉터 대체)
   // setupInterceptors: (instance) => {
   //   instance.interceptors.request.use(...);
   // },
 });
 ```
 
-## Usage
+## 사용법
 
-### Basic Requests
+### 기본 요청
 
 ```typescript
 import { apiClient } from "@/lib/api";
@@ -106,18 +96,18 @@ await apiClient.patch("/users/1", { name: "Patched" });
 await apiClient.delete("/users/1");
 ```
 
-### With Cookies (Server-Side)
+### 쿠키 전달 (서버 컴포넌트)
 
 ```typescript
-// In Server Component or API Route
+// Server Component 또는 API Route에서
 const profile = await apiClient
   .get<Profile>("/profile")
   .withCookie();
 
-// Cookies are automatically forwarded from the request
+// 요청 헤더에 쿠키가 자동으로 포함됨
 ```
 
-### With Request Config
+### 요청 설정
 
 ```typescript
 const response = await apiClient.get<Data>("/data", {
@@ -126,7 +116,7 @@ const response = await apiClient.get<Data>("/data", {
 });
 ```
 
-### Type Safety
+### 타입 지정
 
 ```typescript
 interface User {
@@ -135,14 +125,14 @@ interface User {
   email: string;
 }
 
-// Response is typed as AxiosResponse<User[]>
+// 응답 타입: AxiosResponse<User[]>
 const response = await apiClient.get<User[]>("/users");
 
-// data is User[]
+// data 타입: User[]
 const users = response.data;
 ```
 
-### Error Handling
+### 에러 처리
 
 ```typescript
 try {
@@ -155,56 +145,54 @@ try {
 }
 ```
 
-### Access Axios Instance
+### Axios 인스턴스 접근
 
 ```typescript
 const axiosInstance = apiClient.getAxiosInstance();
 
-// Add custom interceptors after creation
+// 생성 후 커스텀 인터셉터 추가
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized
+      // 인증 실패 처리
     }
     return Promise.reject(error);
   }
 );
 ```
 
-## Interceptors
+## 인터셉터
 
-### Using Callbacks (Recommended)
+### 콜백 방식 (권장)
 
-Add interceptors via the `interceptors` option. These run **after** the default interceptors.
+`interceptors` 옵션으로 인터셉터를 추가합니다. 기본 인터셉터 이후에 실행됩니다.
 
 ```typescript
 const apiClient = createApiClient({
   baseURL: "https://api.example.com",
   interceptors: {
-    // Modify request before sending
+    // 요청 전 설정 수정
     onRequest: (config) => {
       config.headers.Authorization = `Bearer ${getToken()}`;
       return config;
     },
 
-    // Handle request errors
+    // 요청 에러 처리
     onRequestError: (error) => {
       console.error("Request failed:", error);
       return Promise.reject(error);
     },
 
-    // Transform response
+    // 응답 변환
     onResponse: (response) => {
-      // Log all responses
       console.log("Response:", response.status);
       return response;
     },
 
-    // Handle response errors (e.g., 401, 500)
+    // 응답 에러 처리 (401, 500 등)
     onResponseError: async (error) => {
       if (error.response?.status === 401) {
-        // Refresh token and retry
         await refreshToken();
         return apiClient.getAxiosInstance().request(error.config!);
       }
@@ -214,18 +202,17 @@ const apiClient = createApiClient({
 });
 ```
 
-### Using setupInterceptors (Full Control)
+### setupInterceptors 방식 (직접 제어)
 
-Use `setupInterceptors` to completely replace the default interceptors.
+`setupInterceptors`를 사용하면 기본 인터셉터를 완전히 대체합니다.
 
 ```typescript
 const apiClient = createApiClient({
   baseURL: "https://api.example.com",
   setupInterceptors: (instance) => {
-    // You handle everything
     instance.interceptors.request.use(
       (config) => {
-        // Your logic
+        // 직접 구현
         return config;
       },
       (error) => Promise.reject(error)
@@ -239,45 +226,43 @@ const apiClient = createApiClient({
 });
 ```
 
-> ⚠️ When using `setupInterceptors`, the default debug logging interceptors are **not** applied.
+> `setupInterceptors` 사용시 기본 디버그 로깅 인터셉터가 적용되지 않습니다.
 
-## API Reference
+## API
 
 ### createApiClient(options)
 
-Creates an API client instance.
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `baseURL` | `string` | **required** | Base URL for requests |
-| `timeout` | `number` | `10000` | Request timeout (ms) |
-| `headers` | `Record<string, string>` | `{}` | Default headers |
-| `withCredentials` | `boolean` | `true` | Include credentials |
-| `debug` | `boolean` | `false` | Enable console logging |
-| `serverCookieConfig` | `ServerCookieConfig` | `undefined` | Server cookie settings |
-| `interceptors` | `InterceptorCallbacks` | `undefined` | Interceptor callbacks |
-| `setupInterceptors` | `(instance) => void` | `undefined` | Custom interceptors (replaces default) |
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `baseURL` | `string` | **필수** | 요청 기본 URL |
+| `timeout` | `number` | `10000` | 요청 타임아웃 (ms) |
+| `headers` | `Record<string, string>` | `{}` | 기본 헤더 |
+| `withCredentials` | `boolean` | `true` | 자격 증명 포함 여부 |
+| `debug` | `boolean` | `false` | 콘솔 로깅 활성화 |
+| `serverCookieConfig` | `ServerCookieConfig` | `undefined` | 서버 쿠키 설정 |
+| `interceptors` | `InterceptorCallbacks` | `undefined` | 인터셉터 콜백 |
+| `setupInterceptors` | `(instance) => void` | `undefined` | 커스텀 인터셉터 (기본값 대체) |
 
 ### InterceptorCallbacks
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `onRequest` | `(config) => config` | Modify request config |
-| `onRequestError` | `(error) => Promise.reject(error)` | Handle request errors |
-| `onResponse` | `(response) => response` | Modify response |
-| `onResponseError` | `(error) => Promise.reject(error)` | Handle response errors |
+| 옵션 | 타입 | 설명 |
+|------|------|------|
+| `onRequest` | `(config) => config` | 요청 설정 수정 |
+| `onRequestError` | `(error) => Promise.reject(error)` | 요청 에러 처리 |
+| `onResponse` | `(response) => response` | 응답 수정 |
+| `onResponseError` | `(error) => Promise.reject(error)` | 응답 에러 처리 |
 
 ### ServerCookieConfig
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `cookieNames` | `string[]` | Cookie names to check for auth |
-| `redirectPath` | `string \| null` | Redirect path when no auth (null to disable) |
+| 옵션 | 타입 | 설명 |
+|------|------|------|
+| `cookieNames` | `string[]` | 인증 확인할 쿠키 이름 목록 |
+| `redirectPath` | `string \| null` | 인증 없을 때 리다이렉트 경로 (null시 비활성화) |
 
-### ApiClient Methods
+### ApiClient 메서드
 
-| Method | Signature |
-|--------|-----------|
+| 메서드 | 시그니처 |
+|--------|----------|
 | `get` | `<T>(url, config?) => ApiRequest<T>` |
 | `post` | `<T>(url, data?, config?) => ApiRequest<T>` |
 | `put` | `<T>(url, data?, config?) => ApiRequest<T>` |
@@ -285,15 +270,15 @@ Creates an API client instance.
 | `delete` | `<T>(url, config?) => ApiRequest<T>` |
 | `getAxiosInstance` | `() => AxiosInstance` |
 
-### ApiRequest Methods
+### ApiRequest 메서드
 
-| Method | Description |
-|--------|-------------|
-| `.withCookie()` | Enable cookie forwarding |
-| `.execute()` | Execute request (returns Promise) |
-| `.then()` | Promise then handler |
-| `.catch()` | Promise catch handler |
-| `.finally()` | Promise finally handler |
+| 메서드 | 설명 |
+|--------|------|
+| `.withCookie()` | 쿠키 전달 활성화 |
+| `.execute()` | 요청 실행 (Promise 반환) |
+| `.then()` | Promise then 핸들러 |
+| `.catch()` | Promise catch 핸들러 |
+| `.finally()` | Promise finally 핸들러 |
 
 ## Peer Dependencies
 

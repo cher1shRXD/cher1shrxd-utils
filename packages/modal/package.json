@@ -1,7 +1,7 @@
 {
   "name": "@cher1shrxd/modal",
   "version": "1.0.0",
-  "description": "A flexible modal/dialog library for React with stacking support",
+  "description": "React/Next.js용 모달 라이브러리 (다중 모달 지원)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

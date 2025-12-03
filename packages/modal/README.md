@@ -1,25 +1,16 @@
 # @cher1shrxd/modal
 
-A flexible modal/dialog library for React with stacking support.
+React/Next.js용 모달 라이브러리 (다중 모달 지원)
 
-## Features
-
-- 🎯 **Imperative API** - Open modals from anywhere with `modal.open()`
-- 📚 **Stacking support** - Multiple modals can be stacked
-- ⌨️ **Keyboard support** - ESC to close
-- 🎨 **Customizable** - Pass any React component as content
-- 🔒 **Body scroll lock** - Automatically prevents background scrolling
-- 🌐 **Portal-based** - Renders outside your app's DOM hierarchy
-
-## Installation
+## 설치
 
 ```bash
 pnpm add @cher1shrxd/modal zustand
 ```
 
-## Setup
+## 설정
 
-### 1. Add ModalProvider
+### ModalProvider 추가
 
 ```tsx
 // app/layout.tsx
@@ -37,30 +28,30 @@ export default function RootLayout({ children }) {
 }
 ```
 
-## Usage
+## 사용법
 
-### Basic Usage
+### 기본 사용
 
 ```tsx
 import { modal } from "@cher1shrxd/modal";
 
-// Open a modal
+// 모달 열기
 modal.open(
   <div>
-    <h2>Hello!</h2>
-    <p>This is a modal content.</p>
-    <button onClick={() => modal.close()}>Close</button>
+    <h2>안녕하세요!</h2>
+    <p>모달 내용입니다.</p>
+    <button onClick={() => modal.close()}>닫기</button>
   </div>
 );
 
-// Close the current modal
+// 현재 모달 닫기
 modal.close();
 
-// Close all modals
+// 모든 모달 닫기
 modal.closeAll();
 ```
 
-### With Custom Component
+### 커스텀 컴포넌트
 
 ```tsx
 // components/ConfirmModal.tsx
@@ -83,47 +74,47 @@ export const ConfirmModal = ({ title, message, onConfirm }: Props) => {
       <h2>{title}</h2>
       <p>{message}</p>
       <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-        <button onClick={() => modal.close()}>Cancel</button>
-        <button onClick={handleConfirm}>Confirm</button>
+        <button onClick={() => modal.close()}>취소</button>
+        <button onClick={handleConfirm}>확인</button>
       </div>
     </div>
   );
 };
 
-// Usage
+// 사용
 modal.open(
   <ConfirmModal
-    title="Delete Item"
-    message="Are you sure you want to delete this item?"
+    title="항목 삭제"
+    message="정말 삭제하시겠습니까?"
     onConfirm={() => deleteItem(id)}
   />
 );
 ```
 
-### Stacked Modals
+### 모달 중첩
 
 ```tsx
-// First modal
+// 첫 번째 모달
 modal.open(
   <div>
-    <h2>First Modal</h2>
+    <h2>첫 번째 모달</h2>
     <button onClick={() => {
-      // Open second modal on top
+      // 두 번째 모달 열기
       modal.open(
         <div>
-          <h2>Second Modal</h2>
-          <button onClick={() => modal.close()}>Close This</button>
-          <button onClick={() => modal.closeAll()}>Close All</button>
+          <h2>두 번째 모달</h2>
+          <button onClick={() => modal.close()}>이것만 닫기</button>
+          <button onClick={() => modal.closeAll()}>모두 닫기</button>
         </div>
       );
     }}>
-      Open Another Modal
+      다른 모달 열기
     </button>
   </div>
 );
 ```
 
-### Using the Hook
+### Hook 사용
 
 ```tsx
 "use client";
@@ -135,9 +126,9 @@ export const MyComponent = () => {
 
   return (
     <div>
-      <p>Open modals: {modals.length}</p>
-      <button onClick={() => openModal(<div>Content</div>)}>
-        Open Modal
+      <p>열린 모달 수: {modals.length}</p>
+      <button onClick={() => openModal(<div>내용</div>)}>
+        모달 열기
       </button>
     </div>
   );
@@ -148,21 +139,21 @@ export const MyComponent = () => {
 
 ### modal
 
-| Method | Parameters | Description |
-|--------|------------|-------------|
-| `open` | `(content: ReactNode)` | Open a modal with the given content |
-| `close` | `()` | Close the top-most modal |
-| `closeAll` | `()` | Close all open modals |
+| 메서드 | 파라미터 | 설명 |
+|--------|----------|------|
+| `open` | `(content: ReactNode)` | 모달 열기 |
+| `close` | `()` | 현재 모달 닫기 |
+| `closeAll` | `()` | 모든 모달 닫기 |
 
 ### ModalProvider
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `baseZIndex` | `number` | `10000` | Base z-index for modals |
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `baseZIndex` | `number` | `10000` | 모달 기본 z-index |
 
 ### useModalStore
 
-Zustand store with direct access to modal state.
+Zustand 스토어로 모달 상태에 직접 접근합니다.
 
 ```typescript
 interface ModalState {
@@ -177,7 +168,7 @@ interface ModalState {
 
 ### useModal
 
-Hook that provides modal state and handles side effects (body scroll, ESC key, portal).
+모달 상태와 사이드 이펙트(body scroll, ESC 키, portal)를 처리하는 훅입니다.
 
 ```typescript
 const {
@@ -189,19 +180,15 @@ const {
 } = useModal();
 ```
 
-## Styling
-
-### Custom Modal Styles
-
-Override the default styles:
+## 스타일 커스터마이징
 
 ```css
-/* Custom overlay */
+/* 오버레이 커스텀 */
 .cher-modal-overlay {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-/* Custom modal container */
+/* 모달 컨테이너 커스텀 */
 .cher-modal {
   padding: 32px;
   border-radius: 16px;
@@ -209,9 +196,9 @@ Override the default styles:
 }
 ```
 
-### Close Button Helper
+### 닫기 버튼 스타일
 
-A `.cher-modal-close` class is available for styling close buttons:
+`.cher-modal-close` 클래스로 닫기 버튼 스타일을 지정할 수 있습니다:
 
 ```tsx
 modal.open(
@@ -219,18 +206,18 @@ modal.open(
     <button className="cher-modal-close" onClick={() => modal.close()}>
       ×
     </button>
-    <h2>Modal Title</h2>
-    <p>Content here...</p>
+    <h2>모달 제목</h2>
+    <p>내용...</p>
   </div>
 );
 ```
 
-## Behavior
+## 동작 방식
 
-- **Click outside** - Clicking the overlay closes the top-most modal
-- **ESC key** - Pressing Escape closes the top-most modal  
-- **Body scroll** - Body scrolling is disabled when a modal is open
-- **Stacking** - Each new modal appears above the previous one
+- **바깥 클릭** - 오버레이 클릭시 최상위 모달 닫힘
+- **ESC 키** - ESC 누르면 최상위 모달 닫힘
+- **스크롤 잠금** - 모달 열리면 body 스크롤 비활성화
+- **중첩** - 새 모달은 이전 모달 위에 표시
 
 ## Peer Dependencies
 

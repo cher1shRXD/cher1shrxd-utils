@@ -1,7 +1,7 @@
 {
   "name": "@cher1shrxd/loading",
   "version": "1.0.0",
-  "description": "A smooth page transition loading bar for Next.js",
+  "description": "Next.js App Router용 페이지 전환 로딩바",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

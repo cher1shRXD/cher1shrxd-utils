@@ -1,16 +1,16 @@
 # @cher1shrxd/loading
 
-A smooth page transition loading bar for Next.js (App Router).
+Next.js App Router용 페이지 전환 로딩바
 
-## Installation
+## 설치
 
 ```bash
 pnpm add @cher1shrxd/loading zustand
 ```
 
-## Setup
+## 설정
 
-### 1. Add LoadingBar component
+### LoadingBar 추가
 
 ```tsx
 // app/layout.tsx
@@ -28,9 +28,9 @@ export default function RootLayout({ children }) {
 }
 ```
 
-### 2. Use the router hook or Link component
+### 라우터 훅 또는 Link 컴포넌트 사용
 
-**Option 1: Using the router hook**
+**방법 1: useRouter 훅**
 
 ```tsx
 "use client";
@@ -42,15 +42,15 @@ export default function Navigation() {
 
   return (
     <nav>
-      <button onClick={() => router.push("/about")}>About</button>
-      <button onClick={() => router.push("/contact")}>Contact</button>
-      <button onClick={() => router.back()}>Back</button>
+      <button onClick={() => router.push("/about")}>소개</button>
+      <button onClick={() => router.push("/contact")}>연락처</button>
+      <button onClick={() => router.back()}>뒤로가기</button>
     </nav>
   );
 }
 ```
 
-**Option 2: Using the Link component**
+**방법 2: Link 컴포넌트**
 
 ```tsx
 import { Link } from "@cher1shrxd/loading";
@@ -58,8 +58,8 @@ import { Link } from "@cher1shrxd/loading";
 export default function Navigation() {
   return (
     <nav>
-      <Link href="/about">About</Link>
-      <Link href="/contact" className="nav-link">Contact</Link>
+      <Link href="/about">소개</Link>
+      <Link href="/contact" className="nav-link">연락처</Link>
     </nav>
   );
 }
@@ -69,61 +69,61 @@ export default function Navigation() {
 
 ### LoadingBar
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `color` | `string` | `"#3b82f6"` | Color of the loading bar |
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `color` | `string` | `"#3b82f6"` | 로딩바 색상 |
 
 ### Link
 
-A wrapper around Next.js `Link` that automatically triggers the loading bar.
+Next.js `Link`를 감싸서 로딩바를 자동으로 표시합니다.
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `href` | `string` | Yes | Destination URL |
-| `children` | `ReactNode` | Yes | Link content |
-| `className` | `string` | No | CSS class name |
-| `onClick` | `() => void` | No | Click handler |
+| Prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `href` | `string` | O | 이동할 URL |
+| `children` | `ReactNode` | O | 링크 내용 |
+| `className` | `string` | X | CSS 클래스 |
+| `onClick` | `() => void` | X | 클릭 핸들러 |
 
 ```tsx
 import { Link } from "@cher1shrxd/loading";
 
 <Link href="/about" className="nav-link">
-  About Us
+  소개
 </Link>
 ```
 
 ### useRouter
 
-A wrapper around Next.js `useRouter` that automatically triggers the loading bar.
+Next.js `useRouter`를 감싸서 로딩바를 자동으로 표시합니다.
 
 ```typescript
 const router = useRouter();
 
-router.push("/path");    // Navigate with loading bar
-router.replace("/path"); // Replace with loading bar
-router.back();           // Go back with loading bar
-router.refresh();        // Refresh (no loading bar)
+router.push("/path");    // 로딩바와 함께 이동
+router.replace("/path"); // 로딩바와 함께 교체
+router.back();           // 로딩바와 함께 뒤로가기
+router.refresh();        // 새로고침 (로딩바 없음)
 ```
 
 ### useLoadingStore
 
-Direct access to the loading state (Zustand store).
+Zustand 스토어로 로딩 상태에 직접 접근합니다.
 
 ```typescript
 import { useLoadingStore } from "@cher1shrxd/loading";
 
 const { isLoading, setIsLoading } = useLoadingStore();
 
-// Manually trigger loading
+// 수동으로 로딩 시작
 setIsLoading(true);
 
-// Stop loading
+// 로딩 종료
 setIsLoading(false);
 ```
 
 ### useLoading
 
-Access to progress and visibility state.
+진행률과 표시 상태에 접근합니다.
 
 ```typescript
 import { useLoading } from "@cher1shrxd/loading";
@@ -133,12 +133,12 @@ const { progress, visible } = useLoading();
 // visible: boolean
 ```
 
-## How it works
+## 동작 방식
 
-1. When you use `useRouter().push()` or click a `Link`, it sets `isLoading: true`
-2. The loading bar starts animating (progress increases)
-3. When the route changes (pathname changes), progress jumps to 100%
-4. After animation completes, the bar fades out
+1. `useRouter().push()` 또는 `Link` 클릭시 `isLoading: true` 설정
+2. 로딩바 애니메이션 시작 (progress 증가)
+3. 라우트 변경 완료시 (pathname 변경) progress가 100%로 이동
+4. 애니메이션 완료 후 로딩바 페이드아웃
 
 ## Peer Dependencies
 

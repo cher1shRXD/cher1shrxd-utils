@@ -1,7 +1,7 @@
 {
   "name": "@cher1shrxd/api-client",
   "version": "1.0.0",
-  "description": "A flexible API client for Next.js with server-side cookie support",
+  "description": "Next.js SSR 환경에서 쿠키 전달을 지원하는 API 클라이언트",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
