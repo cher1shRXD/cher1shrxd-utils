@@ -40,6 +40,7 @@ export const apiClient = createApiClient({
   debug: process.env.NODE_ENV === "development",
 
   // 서버사이드 쿠키 설정
+  // cookieNames에 등록된 쿠키가 실제로 저장되어 있지 않다면 redirectPath로 페이지 이동
   serverCookieConfig: {
     cookieNames: ["SESSION", "SESSION-LOCAL"],
     redirectPath: "/login", // null로 설정시 리다이렉트 비활성화
