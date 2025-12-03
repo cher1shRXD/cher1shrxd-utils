@@ -6,7 +6,6 @@ import { ToastMessage } from "../types";
 import { useToast } from "../useToast";
 import Toast from "./Toast";
 
-// Inject keyframes once
 let keyframesInjected = false;
 
 const injectKeyframes = () => {

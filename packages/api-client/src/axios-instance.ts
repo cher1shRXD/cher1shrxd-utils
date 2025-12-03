@@ -13,14 +13,12 @@ export const createAxiosInstance = (config: ApiClientConfig): AxiosInstance => {
     withCredentials: config.withCredentials ?? true,
   });
 
-  // Apply custom interceptors if provided, otherwise use default
   if (config.setupInterceptors) {
     config.setupInterceptors(instance);
   } else {
     createDefaultInterceptors(config.debug)(instance);
   }
 
-  // Apply additional interceptor callbacks if provided
   if (config.interceptors) {
     const { onRequest, onRequestError, onResponse, onResponseError } = config.interceptors;
 

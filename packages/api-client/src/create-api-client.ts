@@ -9,12 +9,10 @@ export interface ApiClient {
   put<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T>;
   patch<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T>;
   delete<T = never>(url: string, config?: ApiRequestConfig): ApiRequest<T>;
-  /** Get the underlying axios instance */
   getAxiosInstance(): AxiosInstance;
 }
 
 export interface CreateApiClientOptions extends ApiClientConfig {
-  /** Server-side cookie configuration for authentication */
   serverCookieConfig?: ServerCookieConfig;
 }
 

@@ -5,11 +5,9 @@ import { createPortal } from "react-dom";
 import { useModal } from "../hooks/useModal";
 
 interface ModalProviderProps {
-  /** Base z-index for modals (default: 10000) */
   baseZIndex?: number;
 }
 
-// Inject keyframes once
 let keyframesInjected = false;
 
 const injectKeyframes = () => {

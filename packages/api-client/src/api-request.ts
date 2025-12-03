@@ -62,7 +62,6 @@ export class ApiRequest<T = never> {
       const cookies = nextHeaders.cookies;
       const cookieStore = await cookies();
 
-      // Check for auth cookies if serverCookieConfig is provided
       if (this.serverCookieConfig) {
         const { cookieNames, redirectPath } = this.serverCookieConfig;
         const hasAuthCookie = cookieNames.some((name) => cookieStore.get(name));
