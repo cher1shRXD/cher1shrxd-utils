@@ -3,7 +3,7 @@
 import { CircleAlert, CircleCheck, CircleX, Info } from "lucide-react";
 import { CSSProperties, useEffect } from "react";
 import { ToastMessage } from "../types";
-import { useToast } from "../useToast";
+import { useToast } from "../hooks/useToast";
 import Toast from "./Toast";
 
 let keyframesInjected = false;

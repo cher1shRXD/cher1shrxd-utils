@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { ToastMessage, ToastWithClosing } from "./types";
-import { toastEventEmitter } from "./toast";
+import { ToastMessage, ToastWithClosing } from "../types";
+import { toastEventEmitter } from "../toast";
 
 export const useToast = () => {
   const [toasts, setToasts] = useState<ToastWithClosing[]>([]);

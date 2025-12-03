@@ -3,7 +3,7 @@ export { default as ToastContainer } from "./components/ToastContainer";
 export { default as Toast } from "./components/Toast";
 
 // Hooks
-export { useToast } from "./useToast";
+export { useToast } from "./hooks/useToast";
 
 // Utils
 export { toast, toastEventEmitter } from "./toast";
