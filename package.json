@@ -1,7 +1,7 @@
 {
   "name": "cher1shrxd-utils",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
