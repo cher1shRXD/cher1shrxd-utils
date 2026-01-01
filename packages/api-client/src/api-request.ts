@@ -4,11 +4,11 @@ import { ApiRequestConfig, ServerCookieConfig } from "./types";
 const isClient = typeof window !== "undefined";
 
 export class ApiRequest<T = never> {
-  private url: string;
-  private method: string;
-  private config: ApiRequestConfig;
-  private httpInstance: HttpInstance;
-  private serverCookieConfig: ServerCookieConfig | null;
+  protected url: string;
+  protected method: string;
+  protected config: ApiRequestConfig;
+  protected httpInstance: HttpInstance;
+  protected serverCookieConfig: ServerCookieConfig | null;
 
   constructor(
     url: string,
@@ -24,37 +24,56 @@ export class ApiRequest<T = never> {
     this.serverCookieConfig = serverCookieConfig;
   }
 
+  protected clone(nextConfig: ApiRequestConfig): this {
+    const Ctor = this.constructor as unknown as new (
+      url: string,
+      method: string,
+      config: ApiRequestConfig,
+      httpInstance: HttpInstance,
+      serverCookieConfig: ServerCookieConfig | null
+    ) => this;
+
+    return new Ctor(this.url, this.method, nextConfig, this.httpInstance, this.serverCookieConfig);
+  }
+
   withCookie(): ApiRequest<T> {
     if (isClient) {
-      return new ApiRequest<T>(
-        this.url,
-        this.method,
-        {
-          ...this.config,
-          withCredentials: true,
-        },
-        this.httpInstance,
-        this.serverCookieConfig
-      );
-    } else {
-      return new ApiRequest<T>(
-        this.url,
-        this.method,
-        {
-          ...this.config,
-          _useServerCookies: true,
-        },
-        this.httpInstance,
-        this.serverCookieConfig
-      );
+      return this.clone({
+        ...this.config,
+        withCredentials: true,
+      });
     }
+
+    return this.clone({
+      ...this.config,
+      _useServerCookies: true,
+    });
   }
 
   async execute(): Promise<HttpResponse<T>> {
+    const isServer = !isClient;
+    const isGet = this.method.toUpperCase() === "GET";
+
+    const finalConfig: ApiRequestConfig = { ...this.config };
+
+    if (isServer && isGet) {
+      const hasExplicitRenderingConfig =
+        finalConfig.cache !== undefined || finalConfig.next !== undefined;
+
+      if (finalConfig._useServerCookies) {
+        // Cookies make the request dynamic; force SSR.
+        finalConfig.cache = "no-store";
+        delete (finalConfig as any).next;
+      } else if (!hasExplicitRenderingConfig) {
+        // Default GET is SSR unless explicitly overridden via withISR/withSSG.
+        finalConfig.cache = "no-store";
+      }
+    }
+
     const requestConfig: RequestConfig = {
       method: this.method as RequestConfig["method"],
       url: this.url,
-      ...this.config,
+      ...finalConfig,
     };
 
     if (!isClient && this.config._useServerCookies) {
@@ -100,5 +119,42 @@ export class ApiRequest<T = never> {
 
   finally(onfinally?: (() => void) | null): Promise<HttpResponse<T>> {
     return this.execute().finally(onfinally);
+  }
+}
+
+export class GetApiRequest<T = never> extends ApiRequest<T> {
+  withISR(revalidateTime: number): this {
+    if (!Number.isFinite(revalidateTime) || revalidateTime < 0) {
+      throw new Error("revalidateTime must be a non-negative finite number");
+    }
+
+    return this.clone({
+      ...this.config,
+      cache: "force-cache",
+      next: {
+        ...(this.config.next ?? {}),
+        revalidate: revalidateTime,
+      },
+    });
+  }
+
+  withSSG(): this {
+    const next = this.config.next ? { ...this.config.next } : undefined;
+    if (next) {
+      delete next.revalidate;
+      if (Object.keys(next).length === 0) {
+        return this.clone({
+          ...this.config,
+          cache: "force-cache",
+        });
+      }
+    }
+
+    const nextConfig: ApiRequestConfig = {
+      ...this.config,
+      cache: "force-cache",
+    };
+    if (next) nextConfig.next = next;
+    return this.clone(nextConfig);
   }
 }

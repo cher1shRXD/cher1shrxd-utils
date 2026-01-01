@@ -1,6 +1,6 @@
 {
   "name": "@cher1shrxd/api-client",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Next.js SSR 환경에서 쿠키 전달을 지원하는 API 클라이언트",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

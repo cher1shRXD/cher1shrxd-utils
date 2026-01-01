@@ -2,6 +2,7 @@ export { createApiClient } from "./create-api-client";
 export type { ApiClient, CreateApiClientOptions } from "./create-api-client";
 
 export { ApiRequest } from "./api-request";
+export { GetApiRequest } from "./api-request";
 
 export { createHttpInstance } from "./http-instance";
 

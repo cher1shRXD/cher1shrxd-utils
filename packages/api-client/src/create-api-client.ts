@@ -1,10 +1,10 @@
 import type { HttpInstance } from "./types";
-import { ApiRequest } from "./api-request";
+import { ApiRequest, GetApiRequest } from "./api-request";
 import { createHttpInstance } from "./http-instance";
 import { ApiClientConfig, ApiRequestConfig, ServerCookieConfig } from "./types";
 
 export interface ApiClient {
-  get<T = never>(url: string, config?: ApiRequestConfig): ApiRequest<T>;
+  get<T = never>(url: string, config?: ApiRequestConfig): GetApiRequest<T>;
   post<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T>;
   put<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T>;
   patch<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T>;
@@ -21,8 +21,8 @@ export const createApiClient = (options: CreateApiClientOptions): ApiClient => {
   const serverCookieConfig = options.serverCookieConfig ?? null;
 
   return {
-    get<T = never>(url: string, config?: ApiRequestConfig): ApiRequest<T> {
-      return new ApiRequest<T>(url, "GET", config, httpInstance, serverCookieConfig);
+    get<T = never>(url: string, config?: ApiRequestConfig): GetApiRequest<T> {
+      return new GetApiRequest<T>(url, "GET", config, httpInstance, serverCookieConfig);
     },
 
     post<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T> {

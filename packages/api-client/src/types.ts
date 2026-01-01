@@ -95,6 +95,23 @@ export const isHttpError = (payload: unknown): payload is HttpError => {
 export interface ApiRequestConfig extends Omit<RequestConfig, "method" | "url"> {
   withCredentials?: boolean;
   _useServerCookies?: boolean;
+  /** Next.js fetch cache control (App Router). */
+  cache?: FetchCache;
+  /** Next.js fetch options (App Router). */
+  next?: NextFetchConfig;
+}
+
+export type FetchCache =
+  | "default"
+  | "no-store"
+  | "reload"
+  | "no-cache"
+  | "force-cache"
+  | "only-if-cached";
+
+export interface NextFetchConfig {
+  revalidate?: number | false;
+  tags?: string[];
 }
 
 export type ApiError<T> = HttpError<T>;

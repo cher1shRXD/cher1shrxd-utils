@@ -221,14 +221,22 @@ class FetchHttpInstance {
 
     const credentials = withCredentials ? "include" : "same-origin";
 
+    const cache = (config as any).cache;
+    const next = (config as any).next;
+
     try {
-      const res = await fetch(finalUrl, {
+      const fetchInit: any = {
         method,
         headers: mergedHeaders,
         body,
         signal,
         credentials,
-      });
+      };
+
+      if (cache !== undefined) fetchInit.cache = cache;
+      if (next !== undefined) fetchInit.next = next;
+
+      const res = await fetch(finalUrl, fetchInit);
 
       const response: HttpResponse<T> = {
         data: (await readResponseData(res, (config as any).responseType)) as T,
