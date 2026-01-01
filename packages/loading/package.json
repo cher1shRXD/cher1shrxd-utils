@@ -1,6 +1,6 @@
 {
   "name": "@cher1shrxd/loading",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Next.js App Router용 페이지 전환 로딩바",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
