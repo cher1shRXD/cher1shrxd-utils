@@ -10,6 +10,9 @@ export const useLoading = () => {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(false);
 
+  const navWatchIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startUrlKeyRef = useRef<string | null>(null);
+
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -51,7 +54,46 @@ export const useLoading = () => {
   }, [isLoading, incrementProgress]);
 
   useEffect(() => {
-    if (isLoading) {
+    if (!isLoading) {
+      if (navWatchIntervalRef.current) {
+        clearInterval(navWatchIntervalRef.current);
+        navWatchIntervalRef.current = null;
+      }
+      startUrlKeyRef.current = null;
+      return;
+    }
+
+    // Snapshot current URL key only once at the moment loading starts.
+    // (If we reset this when pathname changes, completion detection can get stuck.)
+    if (startUrlKeyRef.current === null) {
+      if (typeof window !== "undefined") {
+        startUrlKeyRef.current = `${window.location.pathname}${window.location.search}`;
+      } else {
+        startUrlKeyRef.current = pathname;
+      }
+    }
+
+    // Watch for actual committed navigation (including query-string changes)
+    // without using useSearchParams (which would require Suspense).
+    if (navWatchIntervalRef.current) {
+      clearInterval(navWatchIntervalRef.current);
+      navWatchIntervalRef.current = null;
+    }
+
+    navWatchIntervalRef.current = setInterval(() => {
+      if (typeof window === "undefined") return;
+      const startKey = startUrlKeyRef.current;
+      if (!startKey) return;
+
+      const currentKey = `${window.location.pathname}${window.location.search}`;
+      if (currentKey === startKey) return;
+
+      if (navWatchIntervalRef.current) {
+        clearInterval(navWatchIntervalRef.current);
+        navWatchIntervalRef.current = null;
+      }
+      startUrlKeyRef.current = null;
+
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
@@ -64,8 +106,15 @@ export const useLoading = () => {
       timeoutRef.current = setTimeout(() => {
         setIsLoading(false);
       }, 100);
-    }
-  }, [pathname, setIsLoading, isLoading]);
+    }, 50);
+
+    return () => {
+      if (navWatchIntervalRef.current) {
+        clearInterval(navWatchIntervalRef.current);
+        navWatchIntervalRef.current = null;
+      }
+    };
+  }, [isLoading, setIsLoading]);
 
   useEffect(() => {
     if (!isLoading && visible) {
@@ -88,6 +137,10 @@ export const useLoading = () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
+      }
+      if (navWatchIntervalRef.current) {
+        clearInterval(navWatchIntervalRef.current);
+        navWatchIntervalRef.current = null;
       }
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);

@@ -19,11 +19,27 @@ const Link = ({ href, children, className, onClick }: Props) => {
     <NextLink
       href={href}
       onClick={(e) => {
-        const currentUrl = `${pathname}${typeof window !== "undefined" ? window.location.search : ""}`;
-        if (currentUrl !== href) {
-          setIsLoading(true);
+        if (typeof window !== "undefined") {
+          const current = new URL(window.location.href);
+          const target = new URL(href, window.location.href);
+
+          const currentKey = `${current.pathname}${current.search}`;
+          const targetKey = `${target.pathname}${target.search}`;
+
+          if (currentKey === targetKey) {
+            if (current.hash === target.hash) {
+              e.preventDefault();
+            }
+          } else {
+            setIsLoading(true);
+          }
         } else {
-          e.preventDefault();
+          const currentUrl = `${pathname}`;
+          if (currentUrl !== href) {
+            setIsLoading(true);
+          } else {
+            e.preventDefault();
+          }
         }
         onClick?.();
       }}
