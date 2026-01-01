@@ -1,6 +1,6 @@
-import { AxiosInstance } from "axios";
+import type { HttpInstance } from "./types";
 import { ApiRequest } from "./api-request";
-import { createAxiosInstance } from "./axios-instance";
+import { createHttpInstance } from "./http-instance";
 import { ApiClientConfig, ApiRequestConfig, ServerCookieConfig } from "./types";
 
 export interface ApiClient {
@@ -9,7 +9,7 @@ export interface ApiClient {
   put<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T>;
   patch<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T>;
   delete<T = never>(url: string, config?: ApiRequestConfig): ApiRequest<T>;
-  getAxiosInstance(): AxiosInstance;
+  getHttpInstance(): HttpInstance;
 }
 
 export interface CreateApiClientOptions extends ApiClientConfig {
@@ -17,32 +17,32 @@ export interface CreateApiClientOptions extends ApiClientConfig {
 }
 
 export const createApiClient = (options: CreateApiClientOptions): ApiClient => {
-  const axiosInstance = createAxiosInstance(options);
+  const httpInstance = createHttpInstance(options);
   const serverCookieConfig = options.serverCookieConfig ?? null;
 
   return {
     get<T = never>(url: string, config?: ApiRequestConfig): ApiRequest<T> {
-      return new ApiRequest<T>(url, "GET", config, axiosInstance, serverCookieConfig);
+      return new ApiRequest<T>(url, "GET", config, httpInstance, serverCookieConfig);
     },
 
     post<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T> {
-      return new ApiRequest<T>(url, "POST", { ...config, data }, axiosInstance, serverCookieConfig);
+      return new ApiRequest<T>(url, "POST", { ...config, data }, httpInstance, serverCookieConfig);
     },
 
     put<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T> {
-      return new ApiRequest<T>(url, "PUT", { ...config, data }, axiosInstance, serverCookieConfig);
+      return new ApiRequest<T>(url, "PUT", { ...config, data }, httpInstance, serverCookieConfig);
     },
 
     patch<T = never>(url: string, data?: unknown, config?: ApiRequestConfig): ApiRequest<T> {
-      return new ApiRequest<T>(url, "PATCH", { ...config, data }, axiosInstance, serverCookieConfig);
+      return new ApiRequest<T>(url, "PATCH", { ...config, data }, httpInstance, serverCookieConfig);
     },
 
     delete<T = never>(url: string, config?: ApiRequestConfig): ApiRequest<T> {
-      return new ApiRequest<T>(url, "DELETE", config, axiosInstance, serverCookieConfig);
+      return new ApiRequest<T>(url, "DELETE", config, httpInstance, serverCookieConfig);
     },
 
-    getAxiosInstance(): AxiosInstance {
-      return axiosInstance;
+    getHttpInstance(): HttpInstance {
+      return httpInstance;
     },
   };
 };

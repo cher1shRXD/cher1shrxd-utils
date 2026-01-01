@@ -1,4 +1,4 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import type { HttpInstance, RequestConfig, HttpResponse } from "./types";
 import { ApiRequestConfig, ServerCookieConfig } from "./types";
 
 const isClient = typeof window !== "undefined";
@@ -7,20 +7,20 @@ export class ApiRequest<T = never> {
   private url: string;
   private method: string;
   private config: ApiRequestConfig;
-  private axiosInstance: AxiosInstance;
+  private httpInstance: HttpInstance;
   private serverCookieConfig: ServerCookieConfig | null;
 
   constructor(
     url: string,
     method: string,
     config: ApiRequestConfig = {},
-    axiosInstance: AxiosInstance,
+    httpInstance: HttpInstance,
     serverCookieConfig: ServerCookieConfig | null = null
   ) {
     this.url = url;
     this.method = method;
     this.config = config;
-    this.axiosInstance = axiosInstance;
+    this.httpInstance = httpInstance;
     this.serverCookieConfig = serverCookieConfig;
   }
 
@@ -33,7 +33,7 @@ export class ApiRequest<T = never> {
           ...this.config,
           withCredentials: true,
         },
-        this.axiosInstance,
+        this.httpInstance,
         this.serverCookieConfig
       );
     } else {
@@ -44,15 +44,15 @@ export class ApiRequest<T = never> {
           ...this.config,
           _useServerCookies: true,
         },
-        this.axiosInstance,
+        this.httpInstance,
         this.serverCookieConfig
       );
     }
   }
 
-  async execute(): Promise<AxiosResponse<T>> {
-    const requestConfig: AxiosRequestConfig = {
-      method: this.method as AxiosRequestConfig["method"],
+  async execute(): Promise<HttpResponse<T>> {
+    const requestConfig: RequestConfig = {
+      method: this.method as RequestConfig["method"],
       url: this.url,
       ...this.config,
     };
@@ -82,11 +82,11 @@ export class ApiRequest<T = never> {
       }
     }
 
-    return this.axiosInstance.request<T>(requestConfig);
+    return this.httpInstance.request<T>(requestConfig);
   }
 
-  then<TResult1 = AxiosResponse<T>, TResult2 = never>(
-    onfulfilled?: ((value: AxiosResponse<T>) => TResult1 | PromiseLike<TResult1>) | null,
+  then<TResult1 = HttpResponse<T>, TResult2 = never>(
+    onfulfilled?: ((value: HttpResponse<T>) => TResult1 | PromiseLike<TResult1>) | null,
     onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null
   ): Promise<TResult1 | TResult2> {
     return this.execute().then(onfulfilled, onrejected);
@@ -94,11 +94,11 @@ export class ApiRequest<T = never> {
 
   catch<TResult = never>(
     onrejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null
-  ): Promise<AxiosResponse<T> | TResult> {
+  ): Promise<HttpResponse<T> | TResult> {
     return this.execute().catch(onrejected);
   }
 
-  finally(onfinally?: (() => void) | null): Promise<AxiosResponse<T>> {
+  finally(onfinally?: (() => void) | null): Promise<HttpResponse<T>> {
     return this.execute().finally(onfinally);
   }
 }

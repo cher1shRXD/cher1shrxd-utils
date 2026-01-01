@@ -5,7 +5,7 @@ export default defineConfig({
   format: ["cjs", "esm"],
   dts: true,
   clean: true,
-  external: ["axios", "next", "next/headers", "next/navigation"],
+  external: ["next", "next/headers", "next/navigation"],
   treeshake: true,
   splitting: false,
   sourcemap: false,

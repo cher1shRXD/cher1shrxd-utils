@@ -126,7 +126,7 @@ interface User {
   email: string;
 }
 
-// 응답 타입: AxiosResponse<User[]>
+// 응답 타입: HttpResponse<User[]>
 const response = await apiClient.get<User[]>("/users");
 
 // data 타입: User[]
@@ -136,23 +136,25 @@ const users = response.data;
 ### 에러 처리
 
 ```typescript
+import { isHttpError } from "@cher1shrxd/api-client";
+
 try {
   const response = await apiClient.get<User>("/users/999");
 } catch (error) {
-  if (axios.isAxiosError(error)) {
+  if (isHttpError(error)) {
     console.error(error.response?.status); // 404
     console.error(error.response?.data);
   }
 }
 ```
 
-### Axios 인스턴스 접근
+### HTTP 인스턴스 접근
 
 ```typescript
-const axiosInstance = apiClient.getAxiosInstance();
+const httpInstance = apiClient.getHttpInstance();
 
 // 생성 후 커스텀 인터셉터 추가
-axiosInstance.interceptors.response.use(
+httpInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
@@ -195,7 +197,7 @@ const apiClient = createApiClient({
     onResponseError: async (error) => {
       if (error.response?.status === 401) {
         await refreshToken();
-        return apiClient.getAxiosInstance().request(error.config!);
+        return apiClient.getHttpInstance().request(error.config!);
       }
       return Promise.reject(error);
     },
@@ -269,7 +271,7 @@ const apiClient = createApiClient({
 | `put` | `<T>(url, data?, config?) => ApiRequest<T>` |
 | `patch` | `<T>(url, data?, config?) => ApiRequest<T>` |
 | `delete` | `<T>(url, config?) => ApiRequest<T>` |
-| `getAxiosInstance` | `() => AxiosInstance` |
+| `getHttpInstance` | `() => HttpInstance` |
 
 ### ApiRequest 메서드
 
@@ -283,8 +285,7 @@ const apiClient = createApiClient({
 
 ## Peer Dependencies
 
-- `axios` >= 1.0.0
-- `next` >= 13.0.0
+- `next` >= 14.0.0
 
 ## License
 

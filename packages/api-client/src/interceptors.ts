@@ -1,16 +1,16 @@
-import {
-  AxiosInstance,
-  InternalAxiosRequestConfig,
-  AxiosResponse,
-  AxiosError,
-} from "axios";
+import type {
+  HttpInstance,
+  InternalRequestConfig,
+  HttpResponse,
+  HttpError,
+} from "./types";
 
 const isClient = typeof window !== "undefined";
 
 export const createDefaultInterceptors = (debug: boolean = false) => {
-  return (instance: AxiosInstance): void => {
+  return (instance: HttpInstance): void => {
     instance.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
+      (config: InternalRequestConfig) => {
         if (debug) {
           const prefix = isClient ? "[Client]" : "[Server]";
           console.log(
@@ -25,14 +25,14 @@ export const createDefaultInterceptors = (debug: boolean = false) => {
         }
         return config;
       },
-      (error: AxiosError) => Promise.reject(error)
+      (error: HttpError) => Promise.reject(error)
     );
 
     instance.interceptors.response.use(
-      (response: AxiosResponse) => {
+      (response: HttpResponse) => {
         return response;
       },
-      async (error: AxiosError) => {
+      async (error: HttpError) => {
         if (debug) {
           console.error("[API Error]", error.response?.data);
         }
